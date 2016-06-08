@@ -1,7 +1,33 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/TailorDev/msw/command"
+	"github.com/TailorDev/msw/version"
+	"github.com/mitchellh/cli"
+	"os"
+)
 
 func main() {
-	fmt.Printf("Hello, world.\n")
+	ui := &cli.BasicUi{
+		Reader:      os.Stdin,
+		Writer:      os.Stdout,
+		ErrorWriter: os.Stderr,
+	}
+
+	c := cli.NewCLI("ModernScienceWeekly", version.FormattedVersion())
+	c.Args = os.Args[1:]
+
+	c.Commands = map[string]cli.CommandFactory{
+		"validate": func() (cli.Command, error) {
+			return &command.ValidateCommand{Ui: ui}, nil
+		},
+	}
+
+	exitStatus, err := c.Run()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error executing CLI: %s\n", err)
+	}
+
+	os.Exit(exitStatus)
 }
