@@ -2,7 +2,11 @@ package command
 
 import (
 	"flag"
+	"fmt"
 	"github.com/mitchellh/cli"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"path/filepath"
 	"strings"
 )
 
@@ -20,6 +24,19 @@ func (c *ValidateCommand) Run(args []string) int {
 	args = cmdFlags.Args()
 	if len(args) != 1 {
 		cmdFlags.Usage()
+		return 1
+	}
+
+	filename, _ := filepath.Abs(args[0])
+	yamlFile, err := ioutil.ReadFile(filename)
+	if err != nil {
+		c.Ui.Error(fmt.Sprintf("Error reading file: %s", err))
+		return 1
+	}
+
+	issue := map[string]interface{}{}
+	if err := yaml.Unmarshal(yamlFile, &issue); err != nil {
+		c.Ui.Error(fmt.Sprintf("Error parsing file: %s", err))
 		return 1
 	}
 
