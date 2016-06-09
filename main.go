@@ -19,6 +19,9 @@ func main() {
 	c.Args = os.Args[1:]
 
 	c.Commands = map[string]cli.CommandFactory{
+		"generate": func() (cli.Command, error) {
+			return &command.GenerateCommand{Ui: ui}, nil
+		},
 		"validate": func() (cli.Command, error) {
 			return &command.ValidateCommand{Ui: ui}, nil
 		},
