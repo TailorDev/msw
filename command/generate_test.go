@@ -1,10 +1,14 @@
-package command
+package command_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/TailorDev/msw/command"
+)
 
 func TestGenerateNoArgs(t *testing.T) {
 
-	c := &GenerateCommand{Ui: mockUi()}
+	c := &command.GenerateCommand{Ui: mockUi()}
 
 	code := c.Run(nil)
 	if code != 1 {

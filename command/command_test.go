@@ -1,4 +1,4 @@
-package command
+package command_test
 
 import (
 	"bytes"
