@@ -1,0 +1,10 @@
+number: 123
+welcome_text: >
+  Hello, World!
+categories:
+  - title: 'Cat. 1'
+    links:
+      - name: 'Link #1'
+        url: 'http://example.org'
+        abstract: >
+          This is the abstract of the first link.

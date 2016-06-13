@@ -3,11 +3,10 @@ package command
 import (
 	"flag"
 	"fmt"
-	"github.com/mitchellh/cli"
-	"gopkg.in/yaml.v2"
-	"io/ioutil"
-	"path/filepath"
 	"strings"
+
+	"github.com/TailorDev/msw/parser"
+	"github.com/mitchellh/cli"
 )
 
 type ValidateCommand struct {
@@ -27,18 +26,17 @@ func (c *ValidateCommand) Run(args []string) int {
 		return 1
 	}
 
-	filename, _ := filepath.Abs(args[0])
-	yamlFile, err := ioutil.ReadFile(filename)
+	issue, err := parser.Parse(args[0])
 	if err != nil {
-		c.Ui.Error(fmt.Sprintf("Error reading file: %s", err))
+		c.Ui.Error(fmt.Sprintf("%s", err))
 		return 1
 	}
 
-	issue := map[string]interface{}{}
-	if err := yaml.Unmarshal(yamlFile, &issue); err != nil {
-		c.Ui.Error(fmt.Sprintf("Error parsing file: %s", err))
-		return 1
+	for _, categorie := range issue.Categories {
+		c.Ui.Output(fmt.Sprintf("%v", categorie.Title))
 	}
+
+	//resp, err := http.Get("")
 
 	return 0
 }

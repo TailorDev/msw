@@ -1,16 +1,16 @@
 package tpl
 
 const IssueHTML = `
-<h1>Modern Science Weekly &mdash; Issue #{{ .number }} &mdash; {{ .date.Format "01/02/2006" }}</h1>
+<h1>Modern Science Weekly &mdash; Issue #{{ .Number }} &mdash; {{ .Date.Format "01/02/2006" }}</h1>
 
-<p style="text-align: justify;">{{ .welcome_text | markdown }}</p>
+<p style="text-align: justify;">{{ .WelcomeText | markdown }}</p>
 <p>&nbsp;</p>
 
-{{ range $categorie := .categories }}
+{{ range $categorie := .Categories }}
 <hr>
-{{ range .links }}
-<h3 style="margin-top: 2rem;">{{ $categorie.title }} // <a href="{{ .url }}">{{ .name }} &rarr;</a></h3>
-<p style="text-align: justify;">{{ .abstract | markdown }}</p>
+{{ range .Links }}
+<h3 style="margin-top: 2rem;">{{ $categorie.Title }} // <a href="{{ .URL }}">{{ .Name }} &rarr;</a></h3>
+<p style="text-align: justify;">{{ .Abstract | markdown }}</p>
 
 {{ end }}
 {{ end }}
