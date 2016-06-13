@@ -50,3 +50,21 @@ func TestParse(t *testing.T) {
 		t.Fatalf("Expected 'This is the abstract of the first link.\\n', got: %s", link.Abstract)
 	}
 }
+
+func TestParseUnexistentFile(t *testing.T) {
+	_, err := parser.Parse("foobar.yml")
+	if err == nil {
+		t.Fatalf("TestParseUnexistentFile should return an error")
+	}
+}
+
+func TestParseInvalidFilename(t *testing.T) {
+	_, err := parser.Parse("parser_test.go")
+	if err == nil {
+		t.Fatalf("TestParseInvalidFilename should return an error")
+	}
+
+	if err.Error() != "Invalid filename (parser_test.go), should match 'YYYY-MM-DD.yml'" {
+		t.Fatalf("Got: %s", err.Error())
+	}
+}
