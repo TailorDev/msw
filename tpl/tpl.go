@@ -20,5 +20,4 @@ const IssueHTML = `
 
 <p style="text-align: center;">
     <img alt="Modern Science Weekly" class="tl-email-image" data-id="798765" height="100" src="http://gallery.tinyletterapp.com/c66e3e64ae08f8cd0d8e37710e3a5aef07eb6730/images/82443a39-2712-410f-ad7d-632b7fe2f63d.jpg" style="width: 100px; max-width: 100px;" width="100">
-</p>
-`
+</p>`

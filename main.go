@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/TailorDev/msw/command"
 	"github.com/TailorDev/msw/version"
 	"github.com/mitchellh/cli"
-	"os"
 )
 
 func main() {
