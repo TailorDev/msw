@@ -16,6 +16,10 @@ func TestParse(t *testing.T) {
 		t.Fatalf("Expected 123, got %d", issue.Number)
 	}
 
+	if issue.Date.Format("2006-01-02") != "2016-10-13" {
+		t.Fatalf("Expected 2016-10-13, got %s", issue.Date)
+	}
+
 	if issue.WelcomeText != "Hello, World!\n" {
 		t.Fatalf("Expected 'Hello, World!\\n', got %s", issue.WelcomeText)
 	}
