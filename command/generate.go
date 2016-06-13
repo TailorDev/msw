@@ -7,7 +7,9 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
+	"time"
 
 	"github.com/mitchellh/cli"
 	"gopkg.in/yaml.v2"
@@ -37,11 +39,26 @@ func (c *GenerateCommand) Run(args []string) int {
 		return 1
 	}
 
+	r, _ := regexp.Compile("^.*([0-9]{4}-[0-9]{2}-[0-9]{2})\\.yml$")
+	matches := r.FindStringSubmatch(filename)
+	if len(matches) != 2 {
+		c.Ui.Error(fmt.Sprintf("Invalid filename (%s), should match 'YYYY-MM-DD.yml'", filename))
+		return 1
+	}
+
+	date, err := time.Parse("2006-01-02", matches[1])
+	if err != nil {
+		c.Ui.Error(fmt.Sprintf("Error parsing date: %s", err))
+		return 1
+	}
+
 	issue := map[string]interface{}{}
 	if err := yaml.Unmarshal(yamlFile, &issue); err != nil {
 		c.Ui.Error(fmt.Sprintf("Error parsing file: %s", err))
 		return 1
 	}
+
+	issue["date"] = date
 
 	t, err := template.New("issue.html").ParseFiles("template/issue.html")
 	if err != nil {
