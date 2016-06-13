@@ -11,7 +11,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/TailorDev/msw/tpl"
 	"github.com/mitchellh/cli"
+	"github.com/russross/blackfriday"
 	"gopkg.in/yaml.v2"
 )
 
@@ -60,7 +62,11 @@ func (c *GenerateCommand) Run(args []string) int {
 
 	issue["date"] = date
 
-	t, err := template.New("issue.html").ParseFiles("template/issue.html")
+	t, err := template.New("issue").Funcs(template.FuncMap{
+		"markdown": func(s string) template.HTML {
+			return template.HTML(blackfriday.MarkdownBasic([]byte(s)))
+		},
+	}).Parse(tpl.IssueHTML)
 	if err != nil {
 		c.Ui.Error(fmt.Sprintf("Error parsing template: %s", err))
 		return 1
