@@ -3,6 +3,7 @@ package command
 import (
 	"flag"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/TailorDev/msw/parser"
@@ -34,11 +35,39 @@ func (c *ValidateCommand) Run(args []string) int {
 		return 1
 	}
 
-	for _, categorie := range issue.Categories {
-		c.UI.Output(fmt.Sprintf("%v", categorie.Title))
+	if issue.WelcomeText == "" {
+		c.UI.Output("Welcome text is empty")
 	}
 
-	//resp, err := http.Get("")
+	for _, category := range issue.Categories {
+		if len(category.Links) == 0 {
+			c.UI.Output(fmt.Sprintf("No link found for category '%s'", category.Title))
+			continue
+		}
+
+		done := make(chan bool)
+		for idx, link := range category.Links {
+			if link.Name == "" {
+				c.UI.Output(fmt.Sprintf(
+					"No name given for link #%d in category '%s'",
+					idx+1,
+					category.Title,
+				))
+			}
+			if link.URL == "" {
+				c.UI.Output(fmt.Sprintf(
+					"No URL given for link #%d in category '%s'",
+					idx+1,
+					category.Title,
+				))
+			} else {
+				go testLinkURL(link.URL, c.UI, done)
+			}
+		}
+		for i := 0; i < len(category.Links); i++ {
+			<-done
+		}
+	}
 
 	return 0
 }
@@ -57,4 +86,19 @@ Usage: msw validate FILENAME
 // Synopsis returns the short description of the command.
 func (*ValidateCommand) Synopsis() string {
 	return "check that an issue is valid"
+}
+
+func testLinkURL(url string, ui cli.Ui, done chan bool) {
+	resp, err := http.Head(url)
+	if err != nil {
+		ui.Error(fmt.Sprintf("Error while trying to perform a HEAD request: %s", err))
+	} else {
+		defer resp.Body.Close()
+
+		if resp.StatusCode != 200 {
+			ui.Output(fmt.Sprintf("Could not reach URL = '%s'", url))
+		}
+	}
+
+	done <- true
 }
