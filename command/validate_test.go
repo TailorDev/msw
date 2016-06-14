@@ -4,14 +4,15 @@ import (
 	"testing"
 
 	"github.com/TailorDev/msw/command"
+	"github.com/mitchellh/cli"
 )
 
 func TestValidateNoArgs(t *testing.T) {
 
-	c := &command.ValidateCommand{Ui: mockUi()}
+	c := &command.ValidateCommand{UI: new(cli.MockUi)}
 
 	code := c.Run(nil)
 	if code != 1 {
-		t.Fatalf("bad: %#v", code)
+		t.Fatalf("Expected code = 1, got: %d", code)
 	}
 }

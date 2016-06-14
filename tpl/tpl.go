@@ -1,5 +1,6 @@
 package tpl
 
+// IssueHTML is the HTML template of a TinyLetter newsletter
 const IssueHTML = `
 <h1>Modern Science Weekly &mdash; Issue #{{ .Number }} &mdash; {{ .Date.Format "01/02/2006" }}</h1>
 

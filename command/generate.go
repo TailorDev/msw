@@ -13,13 +13,15 @@ import (
 	"github.com/russross/blackfriday"
 )
 
+// GenerateCommand is a Command that generates HTML from YAML files.
 type GenerateCommand struct {
-	Ui cli.Ui
+	UI cli.Ui
 }
 
+// Run runs the code of the comand.
 func (c *GenerateCommand) Run(args []string) int {
 	cmdFlags := flag.NewFlagSet("generate", flag.ContinueOnError)
-	cmdFlags.Usage = func() { c.Ui.Output(c.Help()) }
+	cmdFlags.Usage = func() { c.UI.Output(c.Help()) }
 	if err := cmdFlags.Parse(args); err != nil {
 		return 1
 	}
@@ -32,7 +34,7 @@ func (c *GenerateCommand) Run(args []string) int {
 
 	issue, err := parser.Parse(args[0])
 	if err != nil {
-		c.Ui.Error(fmt.Sprintf("%s", err))
+		c.UI.Error(fmt.Sprintf("%s", err))
 		return 1
 	}
 
@@ -42,18 +44,19 @@ func (c *GenerateCommand) Run(args []string) int {
 		},
 	}).Parse(tpl.IssueHTML)
 	if err != nil {
-		c.Ui.Error(fmt.Sprintf("Error parsing template: %s", err))
+		c.UI.Error(fmt.Sprintf("Error parsing template: %s", err))
 		return 1
 	}
 
 	if err = t.Execute(os.Stdout, issue); err != nil {
-		c.Ui.Error(fmt.Sprintf("Error generating HTML: %s", err))
+		c.UI.Error(fmt.Sprintf("Error generating HTML: %s", err))
 		return 1
 	}
 
 	return 0
 }
 
+// Help returns the description of the command.
 func (*GenerateCommand) Help() string {
 	helpText := `
 Usage: msw generate FILENAME
@@ -64,6 +67,7 @@ Usage: msw generate FILENAME
 	return strings.TrimSpace(helpText)
 }
 
+// Synopsis returns the short description of the command.
 func (*GenerateCommand) Synopsis() string {
 	return "generate HTML for Tinyletter from a YAML file"
 }

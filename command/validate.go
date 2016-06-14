@@ -9,13 +9,15 @@ import (
 	"github.com/mitchellh/cli"
 )
 
+// ValidateCommand is a Command that validates a YAML file.
 type ValidateCommand struct {
-	Ui cli.Ui
+	UI cli.Ui
 }
 
+// Run runs the code of the comand.
 func (c *ValidateCommand) Run(args []string) int {
 	cmdFlags := flag.NewFlagSet("validate", flag.ContinueOnError)
-	cmdFlags.Usage = func() { c.Ui.Output(c.Help()) }
+	cmdFlags.Usage = func() { c.UI.Output(c.Help()) }
 	if err := cmdFlags.Parse(args); err != nil {
 		return 1
 	}
@@ -28,12 +30,12 @@ func (c *ValidateCommand) Run(args []string) int {
 
 	issue, err := parser.Parse(args[0])
 	if err != nil {
-		c.Ui.Error(fmt.Sprintf("%s", err))
+		c.UI.Error(fmt.Sprintf("%s", err))
 		return 1
 	}
 
 	for _, categorie := range issue.Categories {
-		c.Ui.Output(fmt.Sprintf("%v", categorie.Title))
+		c.UI.Output(fmt.Sprintf("%v", categorie.Title))
 	}
 
 	//resp, err := http.Get("")
@@ -41,6 +43,7 @@ func (c *ValidateCommand) Run(args []string) int {
 	return 0
 }
 
+// Help returns the description of the command.
 func (*ValidateCommand) Help() string {
 	helpText := `
 Usage: msw validate FILENAME
@@ -51,6 +54,7 @@ Usage: msw validate FILENAME
 	return strings.TrimSpace(helpText)
 }
 
+// Synopsis returns the short description of the command.
 func (*ValidateCommand) Synopsis() string {
 	return "check that an issue is valid"
 }

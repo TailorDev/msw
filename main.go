@@ -21,10 +21,10 @@ func main() {
 
 	c.Commands = map[string]cli.CommandFactory{
 		"generate": func() (cli.Command, error) {
-			return &command.GenerateCommand{Ui: ui}, nil
+			return &command.GenerateCommand{UI: ui}, nil
 		},
 		"validate": func() (cli.Command, error) {
-			return &command.ValidateCommand{Ui: ui}, nil
+			return &command.ValidateCommand{UI: ui}, nil
 		},
 	}
 
