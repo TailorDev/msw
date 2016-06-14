@@ -7,7 +7,7 @@ import (
 )
 
 func TestParse(t *testing.T) {
-	issue, err := parser.Parse("../fixtures/2016-10-13.yml")
+	issue, err := parser.Parse("../test-fixtures/2016-10-13.yml")
 	if err != nil {
 		t.Fatalf("TestParse: %s", err)
 	}
@@ -66,5 +66,12 @@ func TestParseInvalidFilename(t *testing.T) {
 
 	if err.Error() != "Invalid filename (parser_test.go), should match 'YYYY-MM-DD.yml'" {
 		t.Fatalf("Got: %s", err.Error())
+	}
+}
+
+func TestParseInvalidDate(t *testing.T) {
+	_, err := parser.Parse("../test-fixtures/0000-00-00.yml")
+	if err == nil {
+		t.Fatalf("TestParseInvalidDate should return an error")
 	}
 }
