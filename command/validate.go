@@ -46,6 +46,7 @@ func (c *ValidateCommand) Run(args []string) int {
 		}
 
 		done := make(chan bool)
+		wait := 0
 		for idx, link := range category.Links {
 			if link.Name == "" {
 				c.UI.Output(fmt.Sprintf(
@@ -61,10 +62,11 @@ func (c *ValidateCommand) Run(args []string) int {
 					category.Title,
 				))
 			} else {
+				wait++
 				go testLinkURL(link.URL, c.UI, done)
 			}
 		}
-		for i := 0; i < len(category.Links); i++ {
+		for i := 0; i < wait; i++ {
 			<-done
 		}
 	}
