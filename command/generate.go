@@ -1,10 +1,10 @@
 package command
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"html/template"
-	"os"
 	"strings"
 
 	"github.com/TailorDev/msw/parser"
@@ -48,10 +48,13 @@ func (c *GenerateCommand) Run(args []string) int {
 		return 1
 	}
 
-	if err = t.Execute(os.Stdout, issue); err != nil {
+	var out bytes.Buffer
+	if err = t.Execute(&out, issue); err != nil {
 		c.UI.Error(fmt.Sprintf("Error generating HTML: %s", err))
 		return 1
 	}
+
+	c.UI.Output(out.String())
 
 	return 0
 }
