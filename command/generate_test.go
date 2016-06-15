@@ -28,6 +28,12 @@ func TestGenerate(t *testing.T) {
 	if !strings.Contains(ui.OutputWriter.String(), "Issue #123 &mdash; 10/13/2016") {
 		t.Fatalf("got: %s", ui.OutputWriter)
 	}
+	if strings.Contains(ui.OutputWriter.String(), "<p style=\"text-align: justify;\"><p>") {
+		t.Fatalf("Do not expect enclosing paragraph, but got: %s", ui.OutputWriter)
+	}
+	if strings.Contains(ui.OutputWriter.String(), "</p>\n</p>") {
+		t.Fatalf("Do not expect enclosing paragraph, but got: %s", ui.OutputWriter)
+	}
 }
 
 func BenchmarkGenerate(b *testing.B) {

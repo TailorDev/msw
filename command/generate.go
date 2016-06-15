@@ -39,9 +39,7 @@ func (c *GenerateCommand) Run(args []string) int {
 	}
 
 	t, err := template.New("issue").Funcs(template.FuncMap{
-		"markdown": func(s string) template.HTML {
-			return template.HTML(blackfriday.MarkdownBasic([]byte(s)))
-		},
+		"markdown": markdown,
 	}).Parse(tpl.IssueHTML)
 	if err != nil {
 		c.UI.Error(fmt.Sprintf("Error parsing template: %s", err))
@@ -73,4 +71,13 @@ Usage: msw generate FILENAME
 // Synopsis returns the short description of the command.
 func (*GenerateCommand) Synopsis() string {
 	return "generate HTML for Tinyletter from a YAML file"
+}
+
+func markdown(s string) template.HTML {
+	markdown := blackfriday.MarkdownBasic([]byte(s))
+	// remove enclosing <p> tag
+	markdown = bytes.TrimLeft(markdown, "<p>")
+	markdown = bytes.TrimRight(markdown, "</p>\n")
+
+	return template.HTML(markdown)
 }
