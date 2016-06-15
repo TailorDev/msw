@@ -2,6 +2,9 @@ package parser
 
 import "time"
 
+// MaxLinks represents the maximal number of links per issue.
+const MaxLinks int = 8
+
 // Issue is a structure representing a newsletter issue.
 type Issue struct {
 	Number      int

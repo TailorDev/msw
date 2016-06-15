@@ -39,14 +39,16 @@ func (c *ValidateCommand) Run(args []string) int {
 		c.UI.Output("Welcome text is empty")
 	}
 
+	done := make(chan bool)
+	wait := 0
+	nbLinks := 0
 	for _, category := range issue.Categories {
 		if len(category.Links) == 0 {
 			c.UI.Output(fmt.Sprintf("No link found for category '%s'", category.Title))
 			continue
 		}
+		nbLinks = nbLinks + len(category.Links)
 
-		done := make(chan bool)
-		wait := 0
 		for idx, link := range category.Links {
 			if link.Name == "" {
 				c.UI.Output(fmt.Sprintf(
@@ -65,11 +67,25 @@ func (c *ValidateCommand) Run(args []string) int {
 				wait++
 				go testLinkURL(link.URL, c.UI, done)
 			}
-		}
-		for i := 0; i < wait; i++ {
-			<-done
+			if link.Abstract == "" {
+				c.UI.Output(fmt.Sprintf(
+					"No abstract given for link #%d in category '%s'",
+					idx+1,
+					category.Title,
+				))
+			}
 		}
 	}
+
+	for i := 0; i < wait; i++ {
+		<-done
+	}
+
+	if nbLinks > parser.MaxLinks {
+		c.UI.Output(fmt.Sprintf("An issue should not have more than %d links, found: %d", parser.MaxLinks, nbLinks))
+	}
+
+	c.UI.Output("Everything looks good 👍")
 
 	return 0
 }
