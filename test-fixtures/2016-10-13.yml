@@ -7,4 +7,5 @@ categories:
       - name: 'Link #1'
         url: 'http://example.org'
         abstract: >
-          This is the abstract of the first link.
+          <a href="http://example.org">this is a link</a>, and this is the
+          abstract of the first link.

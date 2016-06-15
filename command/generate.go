@@ -75,26 +75,23 @@ func (*GenerateCommand) Synopsis() string {
 func markdown(s string) template.HTML {
 	markdown := blackfriday.MarkdownBasic([]byte(s))
 	// remove enclosing <p> tag
-	markdown = bytes.TrimLeft(markdown, "<p>")
-	markdown = bytes.TrimRight(markdown, "</p>\n")
+	markdown = bytes.TrimPrefix(markdown, []byte("<p>"))
+	markdown = bytes.TrimSuffix(markdown, []byte("</p>\n"))
 
 	return template.HTML(markdown)
 }
 
-const issueHTML = `
-<h1>Modern Science Weekly &mdash; Issue #{{ .Number }} &mdash; {{ .Date.Format "01/02/2006" }}</h1>
+const issueHTML = `<h1>Modern Science Weekly &mdash; Issue #{{ .Number }} &mdash; {{ .Date.Format "01/02/2006" }}</h1>
 
 <p style="text-align: justify;">{{ .WelcomeText | markdown }}</p>
 <p>&nbsp;</p>
-
 {{ range $categorie := .Categories }}
 <hr>
-{{ range .Links }}
+{{- range .Links }}
 <h3 style="margin-top: 2rem;">{{ $categorie.Title }} // <a href="{{ .URL }}">{{ .Name }} &rarr;</a></h3>
 <p style="text-align: justify;">{{ .Abstract | markdown }}</p>
-
-{{ end }}
-{{ end }}
+{{ end -}}
+{{- end -}}
 <p>&nbsp;</p>
 <hr>
 <p style="text-align: justify;">If you received this email directly then you're already signed up, thanks! If however someone forwarded this email to you and you'd like to get it each week then you can subscribe at <a href="https://tinyletter.com/ModernScienceWeekly">https://tinyletter.com/ModernScienceWeekly</a>.</p>

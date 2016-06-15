@@ -1,6 +1,7 @@
 package parser_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/TailorDev/msw/parser"
@@ -46,8 +47,8 @@ func TestParse(t *testing.T) {
 		t.Fatalf("Expected 'http://example.org', got: %s", link.URL)
 	}
 
-	if link.Abstract != "This is the abstract of the first link.\n" {
-		t.Fatalf("Expected 'This is the abstract of the first link.\\n', got: %s", link.Abstract)
+	if !strings.Contains(link.Abstract, "this is the abstract of the first link.") {
+		t.Fatalf("Expected abstract to contain 'this is the abstract of the first link.', got: %s", link.Abstract)
 	}
 }
 
