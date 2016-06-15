@@ -23,7 +23,7 @@ func TestGenerate(t *testing.T) {
 
 	code := c.Run([]string{"../test-fixtures/2016-10-13.yml"})
 	if code != 0 {
-		t.Fatalf("TestGenerate should work correctly")
+		t.Fatalf("Command should return 0, got: %d", code)
 	}
 	if !strings.Contains(ui.OutputWriter.String(), "Issue #123 &mdash; 10/13/2016") {
 		t.Fatalf("got: %s", ui.OutputWriter)
