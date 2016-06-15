@@ -35,40 +35,42 @@ func (c *ValidateCommand) Run(args []string) int {
 		return 1
 	}
 
+	errors := []string{}
+
 	if i.WelcomeText == "" {
-		c.UI.Output("Welcome text is empty")
+		errors = append(errors, "Welcome text is empty")
 	}
 
-	done := make(chan bool)
+	done := make(chan string)
 	wait := 0
 	nbLinks := 0
 	for _, category := range i.Categories {
 		if len(category.Links) == 0 {
-			c.UI.Output(fmt.Sprintf("No link found for category '%s'", category.Title))
+			errors = append(errors, fmt.Sprintf("No link found for category '%s'", category.Title))
 			continue
 		}
 		nbLinks = nbLinks + len(category.Links)
 
 		for idx, link := range category.Links {
 			if link.Name == "" {
-				c.UI.Output(fmt.Sprintf(
+				errors = append(errors, fmt.Sprintf(
 					"No name given for link #%d in category '%s'",
 					idx+1,
 					category.Title,
 				))
 			}
 			if link.URL == "" {
-				c.UI.Output(fmt.Sprintf(
+				errors = append(errors, fmt.Sprintf(
 					"No URL given for link #%d in category '%s'",
 					idx+1,
 					category.Title,
 				))
 			} else {
 				wait++
-				go testLinkURL(link.URL, c.UI, done)
+				go testLinkURL(link.URL, done)
 			}
 			if link.Abstract == "" {
-				c.UI.Output(fmt.Sprintf(
+				errors = append(errors, fmt.Sprintf(
 					"No abstract given for link #%d in category '%s'",
 					idx+1,
 					category.Title,
@@ -78,14 +80,27 @@ func (c *ValidateCommand) Run(args []string) int {
 	}
 
 	for i := 0; i < wait; i++ {
-		<-done
+		if e := <-done; e != "" {
+			errors = append(errors, e)
+		}
 	}
 
 	if nbLinks > issue.MaxLinks {
-		c.UI.Output(fmt.Sprintf("An issue should not have more than %d links, found: %d", issue.MaxLinks, nbLinks))
+		errors = append(errors, fmt.Sprintf(
+			"An issue should not have more than %d links, found: %d",
+			issue.MaxLinks,
+			nbLinks,
+		))
 	}
 
-	c.UI.Output("Everything looks good 👍")
+	if len(errors) == 0 {
+		c.UI.Output("Everything looks good 👍")
+		return 1
+	}
+
+	for _, e := range errors {
+		c.UI.Output(e)
+	}
 
 	return 0
 }
@@ -106,17 +121,18 @@ func (*ValidateCommand) Synopsis() string {
 	return "check that an issue is valid"
 }
 
-func testLinkURL(url string, ui cli.Ui, done chan bool) {
+func testLinkURL(url string, done chan string) {
 	resp, err := http.Head(url)
 	if err != nil {
-		ui.Error(fmt.Sprintf("Error while trying to perform a HEAD request: %s", err))
-	} else {
-		defer resp.Body.Close()
+		done <- fmt.Sprintf("Error while trying to perform a HEAD request: %s", err)
+		return
+	}
+	defer resp.Body.Close()
 
-		if resp.StatusCode != 200 {
-			ui.Output(fmt.Sprintf("Could not reach URL = '%s'", url))
-		}
+	if resp.StatusCode != 200 {
+		done <- fmt.Sprintf("Could not reach URL = '%s'", url)
+		return
 	}
 
-	done <- true
+	done <- ""
 }
