@@ -1,14 +1,14 @@
-package parser_test
+package issue_test
 
 import (
 	"strings"
 	"testing"
 
-	"github.com/TailorDev/msw/parser"
+	"github.com/TailorDev/msw/issue"
 )
 
 func TestParse(t *testing.T) {
-	issue, err := parser.Parse("../test-fixtures/2016-10-13.yml")
+	issue, err := issue.Parse("../test-fixtures/2016-10-13.yml")
 	if err != nil {
 		t.Fatalf("TestParse: %s", err)
 	}
@@ -53,14 +53,14 @@ func TestParse(t *testing.T) {
 }
 
 func TestParseUnexistentFile(t *testing.T) {
-	_, err := parser.Parse("foobar.yml")
+	_, err := issue.Parse("foobar.yml")
 	if err == nil {
 		t.Fatalf("TestParseUnexistentFile should return an error")
 	}
 }
 
 func TestParseInvalidFilename(t *testing.T) {
-	_, err := parser.Parse("parser_test.go")
+	_, err := issue.Parse("parser_test.go")
 	if err == nil {
 		t.Fatalf("TestParseInvalidFilename should return an error")
 	}
@@ -71,7 +71,7 @@ func TestParseInvalidFilename(t *testing.T) {
 }
 
 func TestParseInvalidDate(t *testing.T) {
-	_, err := parser.Parse("../test-fixtures/0000-00-00.yml")
+	_, err := issue.Parse("../test-fixtures/0000-00-00.yml")
 	if err == nil {
 		t.Fatalf("TestParseInvalidDate should return an error")
 	}

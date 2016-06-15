@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/TailorDev/msw/parser"
+	"github.com/TailorDev/msw/issue"
 	"github.com/mitchellh/cli"
 )
 
@@ -29,20 +29,20 @@ func (c *ValidateCommand) Run(args []string) int {
 		return 1
 	}
 
-	issue, err := parser.Parse(args[0])
+	i, err := issue.Parse(args[0])
 	if err != nil {
 		c.UI.Error(fmt.Sprintf("%s", err))
 		return 1
 	}
 
-	if issue.WelcomeText == "" {
+	if i.WelcomeText == "" {
 		c.UI.Output("Welcome text is empty")
 	}
 
 	done := make(chan bool)
 	wait := 0
 	nbLinks := 0
-	for _, category := range issue.Categories {
+	for _, category := range i.Categories {
 		if len(category.Links) == 0 {
 			c.UI.Output(fmt.Sprintf("No link found for category '%s'", category.Title))
 			continue
@@ -81,8 +81,8 @@ func (c *ValidateCommand) Run(args []string) int {
 		<-done
 	}
 
-	if nbLinks > parser.MaxLinks {
-		c.UI.Output(fmt.Sprintf("An issue should not have more than %d links, found: %d", parser.MaxLinks, nbLinks))
+	if nbLinks > issue.MaxLinks {
+		c.UI.Output(fmt.Sprintf("An issue should not have more than %d links, found: %d", issue.MaxLinks, nbLinks))
 	}
 
 	c.UI.Output("Everything looks good 👍")

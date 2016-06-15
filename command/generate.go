@@ -7,7 +7,7 @@ import (
 	"html/template"
 	"strings"
 
-	"github.com/TailorDev/msw/parser"
+	"github.com/TailorDev/msw/issue"
 	"github.com/mitchellh/cli"
 	"github.com/russross/blackfriday"
 )
@@ -31,7 +31,7 @@ func (c *GenerateCommand) Run(args []string) int {
 		return 1
 	}
 
-	issue, err := parser.Parse(args[0])
+	issue, err := issue.Parse(args[0])
 	if err != nil {
 		c.UI.Error(fmt.Sprintf("%s", err))
 		return 1
