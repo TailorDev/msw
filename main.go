@@ -23,6 +23,9 @@ func main() {
 		"generate": func() (cli.Command, error) {
 			return &command.GenerateCommand{UI: ui}, nil
 		},
+		"new": func() (cli.Command, error) {
+			return &command.NewCommand{UI: ui}, nil
+		},
 		"validate": func() (cli.Command, error) {
 			return &command.ValidateCommand{UI: ui}, nil
 		},
