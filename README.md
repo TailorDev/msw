@@ -43,6 +43,16 @@ You can run the test suite with the following command:
 
     $ go test ./... [-cover]
 
+You can build packages with [gox](https://github.com/mitchellh/gox):
+
+    $ go get github.com/mitchellh/gox
+    ...
+    $ gox -osarch="darwin/amd64 linux/amd64" -output="pkg/msw_{{.OS}}_{{.Arch}}"
+    Number of parallel builds: 1
+
+    -->    darwin/amd64: github.com/TailorDev/msw
+    -->     linux/amd64: github.com/TailorDev/msw
+
 
 ## License
 
