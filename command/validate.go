@@ -95,14 +95,14 @@ func (c *ValidateCommand) Run(args []string) int {
 
 	if len(errors) == 0 {
 		c.UI.Output("Everything looks good 👍")
-		return 1
+		return 0
 	}
 
 	for _, e := range errors {
 		c.UI.Output(e)
 	}
 
-	return 0
+	return 1
 }
 
 // Help returns the description of the command.
