@@ -18,6 +18,7 @@ order to learn the Go language, which we also decided to open source.
 
     Available commands are:
         generate    generate HTML for Tinyletter from a YAML file
+        new         create a new empty YAML file to prepare a new issue.
         validate    check that an issue is valid
 
 
@@ -40,7 +41,7 @@ run:
 
 You can run the test suite with the following command:
 
-    $ go test ./...
+    $ go test ./... [-cover]
 
 
 ## License
