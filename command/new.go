@@ -125,7 +125,7 @@ Options:
   -date=<date>			The date of the issue. Defaults to next Wednesday.
 
   -directory=path		The directory where to write the generated file.
-						Defaults to current working directory.
+				Defaults to current working directory.
 
 `
 	return strings.TrimSpace(helpText)
