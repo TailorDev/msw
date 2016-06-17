@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/TailorDev/msw/issue"
 	"github.com/mitchellh/cli"
 )
 
@@ -86,13 +87,8 @@ func (c *NewCommand) Run(args []string) int {
 		Number     int
 		Categories []string
 	}{
-		Number: number,
-		Categories: []string{
-			"Open Science & Data",
-			"Tools for Scientists",
-			"Cutting-edge Science",
-			"Beyond Academia",
-		},
+		Number:     number,
+		Categories: issue.DefaultCategories,
 	}
 
 	var out bytes.Buffer
