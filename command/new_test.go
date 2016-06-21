@@ -11,7 +11,7 @@ import (
 	"github.com/mitchellh/cli"
 )
 
-func TestNewNoArgs(t *testing.T) {
+func TestNewInvalidArgs(t *testing.T) {
 	ui := new(cli.MockUi)
 	cmd := &command.NewCommand{UI: ui}
 	cases := []struct {
