@@ -26,6 +26,7 @@ order to learn the Go language, which we also decided to open source.
 
     $ go get github.com/TailorDev/msw
 
+Alternatively, you can download pre-compiled packages: https://github.com/TailorDev/msw/releases.
 
 ## Development and Testing
 
