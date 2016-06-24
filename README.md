@@ -6,7 +6,10 @@ msw
 **msw** is a small tool that powers the
 [ModernScienceWeekly](https://tinyletter.com/ModernScienceWeekly) newsletter,
 written in Go. This is a full rewrite of one of our internal tools we did in
-order to learn the Go language, which we also decided to open source.
+order to learn the Go language, which we also decided to open source. You can
+find our blog post about this very first experience:
+
+* https://tailordev.fr/blog/2016/06/23/a-tour-of-go/
 
 
 ## Usage
