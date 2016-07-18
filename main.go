@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/TailorDev/msw/command"
 	"github.com/TailorDev/msw/version"
@@ -24,7 +25,7 @@ func main() {
 			return &command.GenerateCommand{UI: ui}, nil
 		},
 		"new": func() (cli.Command, error) {
-			return &command.NewCommand{UI: ui}, nil
+			return &command.NewCommand{UI: ui, Now: time.Now}, nil
 		},
 		"validate": func() (cli.Command, error) {
 			return &command.ValidateCommand{UI: ui}, nil
