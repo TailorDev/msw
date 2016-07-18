@@ -20,7 +20,8 @@ import (
 // NewCommand is a Command that creates a new empty YAML file to prepare a new
 // issue.
 type NewCommand struct {
-	UI cli.Ui
+	UI  cli.Ui
+	Now func() time.Time
 }
 
 // Run runs the code of the comand.
@@ -59,9 +60,12 @@ func (c *NewCommand) Run(args []string) int {
 		date = d
 	} else {
 		// compute next Wednesday
-		now := time.Now()
-		wd := int(now.Weekday())
-		date = now.AddDate(0, 0, 10-wd)
+		wd := int(c.Now().Weekday())
+		offset := 10 - wd
+		if wd < 4 { // Thursday
+			offset = offset - 7
+		}
+		date = c.Now().AddDate(0, 0, offset)
 	}
 
 	var directory string
