@@ -30,6 +30,9 @@ func main() {
 		"validate": func() (cli.Command, error) {
 			return &command.ValidateCommand{UI: ui}, nil
 		},
+		"buffer": func() (cli.Command, error) {
+			return &command.BufferCommand{UI: ui}, nil
+		},
 	}
 
 	exitStatus, err := c.Run()
