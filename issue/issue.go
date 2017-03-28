@@ -20,10 +20,6 @@ type Issue struct {
 	Date        time.Time
 	Categories  []struct {
 		Title string
-		Links []struct {
-			Name     string
-			URL      string `yaml:"url"`
-			Abstract string
-		}
+		Links []Link
 	}
 }

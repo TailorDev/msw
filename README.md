@@ -14,15 +14,28 @@ find our blog post about this very first experience:
 
 ## Usage
 
-[Install the `msw` command](#installation), then run it:
+1. [Install the `msw` command](#installation)
+2. (optionally) create a configuration file `~/.msw/msw.toml`:
 
+    ``` toml
+    # ~/.msw/msw.toml
+    [buffer]
+    AccessToken = "BUFFER_ACCESS_TOKEN"
+    ProfileIDs  = ["BUFFER_PROFILE_ID"]
+    ```
+
+3. Run `msw`:
+
+    ```
     $ msw
     usage: ModernScienceWeekly [--version] [--help] <command> [<args>]
 
     Available commands are:
+        buffer      push links to Buffer.com's queue
         generate    generate HTML for Tinyletter from a YAML file
-        new         create a new empty YAML file to prepare a new issue.
+        new         create a new empty YAML file to prepare a new issue
         validate    check that an issue is valid
+    ```
 
 
 ## Installation
