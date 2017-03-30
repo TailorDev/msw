@@ -17,7 +17,7 @@ func main() {
 		ErrorWriter: os.Stderr,
 	}
 
-	c := cli.NewCLI("ModernScienceWeekly", version.FormattedVersion())
+	c := cli.NewCLI("msw", version.FormattedVersion())
 	c.Args = os.Args[1:]
 
 	c.Commands = map[string]cli.CommandFactory{
@@ -30,8 +30,11 @@ func main() {
 		"validate": func() (cli.Command, error) {
 			return &command.ValidateCommand{UI: ui}, nil
 		},
-		"buffer": func() (cli.Command, error) {
-			return &command.BufferCommand{UI: ui}, nil
+		"buffer push": func() (cli.Command, error) {
+			return &command.BufferPushCommand{UI: ui}, nil
+		},
+		"buffer info": func() (cli.Command, error) {
+			return &command.BufferInfoCommand{UI: ui}, nil
 		},
 	}
 
