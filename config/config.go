@@ -1,9 +1,9 @@
-// config contains the code to read user's configuration.
+// Package config contains the code to read user's configuration.
 // Inspired by https://benaiah.me/posts/configuring-go-apps-with-toml/
 package config
 
 import (
-	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -59,15 +59,16 @@ func GetDefaultConfigDir() (string, error) {
 }
 
 func LoadConfig(configFile string) (*Config, error) {
+	conf := DefaultConfig
+
 	if _, err := os.Stat(configFile); os.IsNotExist(err) {
-		return nil, errors.New("Config file does not exist.")
+		return &conf, fmt.Errorf("configuration file is missing (%s).", configFile)
 	} else if err != nil {
-		return nil, err
+		return &conf, err
 	}
 
-	conf := DefaultConfig
 	if _, err := toml.DecodeFile(configFile, &conf); err != nil {
-		return nil, err
+		return &conf, err
 	}
 
 	return &conf, nil

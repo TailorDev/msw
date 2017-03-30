@@ -13,7 +13,8 @@ import (
 
 // BufferPushCommand is a Command that pushes links to Buffer.com's queue.
 type BufferPushCommand struct {
-	UI cli.Ui
+	UI   cli.Ui
+	Conf config.Config
 }
 
 // Run runs the code of the comand.
@@ -38,18 +39,12 @@ func (c *BufferPushCommand) Run(args []string) int {
 		return 1
 	}
 
-	conf, err := config.LoadDefaultConfig()
-	if err != nil {
-		c.UI.Error(fmt.Sprintf("%s", err))
-		return 1
-	}
-
-	if conf.Buffer.AccessToken == "" {
+	if c.Conf.Buffer.AccessToken == "" {
 		c.UI.Error("You must specify an access token in the configuration file.")
 		return 1
 	}
 
-	if len(conf.Buffer.ProfileIDs) == 0 {
+	if len(c.Conf.Buffer.ProfileIDs) == 0 {
 		c.UI.Error("You must specify at least one profile ID in the configuration file.")
 		return 1
 	}
@@ -58,14 +53,14 @@ func (c *BufferPushCommand) Run(args []string) int {
 		c.UI.Output("Re-run the command with `-apply` to actually push to Buffer.com\n")
 	}
 
-	cli := buffer.NewClient(conf.Buffer.AccessToken)
+	cli := buffer.NewClient(c.Conf.Buffer.AccessToken)
 	for _, category := range i.Categories {
 		for _, link := range category.Links {
 			if link.Name != "" && link.URL != "" {
 				text := link.GetBufferText()
 
 				if apply {
-					updates, err := cli.Push(text, conf.Buffer.ProfileIDs)
+					updates, err := cli.Push(text, c.Conf.Buffer.ProfileIDs)
 					if err != nil {
 						c.UI.Error(fmt.Sprintf("%s", err))
 						return 1

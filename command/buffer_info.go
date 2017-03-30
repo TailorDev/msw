@@ -12,7 +12,8 @@ import (
 
 // BufferInfoCommand is a Command that outputs Buffer.com information.
 type BufferInfoCommand struct {
-	UI cli.Ui
+	UI   cli.Ui
+	Conf config.Config
 }
 
 // Run runs the code of the comand.
@@ -23,24 +24,18 @@ func (c *BufferInfoCommand) Run(args []string) int {
 		return 1
 	}
 
-	conf, err := config.LoadDefaultConfig()
-	if err != nil {
-		c.UI.Error(fmt.Sprintf("%s", err))
-		return 1
-	}
-
-	if conf.Buffer.AccessToken == "" {
+	if c.Conf.Buffer.AccessToken == "" {
 		c.UI.Error("You must specify an access token in the configuration file.")
 		return 1
 	}
 
-	if len(conf.Buffer.ProfileIDs) == 0 {
+	if len(c.Conf.Buffer.ProfileIDs) == 0 {
 		c.UI.Error("You must specify at least one profile ID in the configuration file.")
 		return 1
 	}
 
-	cli := buffer.NewClient(conf.Buffer.AccessToken)
-	for _, id := range conf.Buffer.ProfileIDs {
+	cli := buffer.NewClient(c.Conf.Buffer.AccessToken)
+	for _, id := range c.Conf.Buffer.ProfileIDs {
 		p, err := cli.GetProfile(id)
 		if err != nil {
 			c.UI.Error(fmt.Sprintf("%s", err))
@@ -51,7 +46,7 @@ func (c *BufferInfoCommand) Run(args []string) int {
 
 		updates, _ := cli.GetPendingUpdates(id)
 
-		c.UI.Output(fmt.Sprintf("Buffer : %d / %d\n", len(updates), conf.Buffer.BufferSize))
+		c.UI.Output(fmt.Sprintf("Buffer : %d / %d\n", len(updates), c.Conf.Buffer.BufferSize))
 		c.UI.Output("Scheduled updates:\n")
 
 		for _, u := range updates {
