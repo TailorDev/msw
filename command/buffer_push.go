@@ -11,17 +11,17 @@ import (
 	"github.com/mitchellh/cli"
 )
 
-// BufferCommand is a Command that pushes links to Buffer.com's queue.
-type BufferCommand struct {
+// BufferPushCommand is a Command that pushes links to Buffer.com's queue.
+type BufferPushCommand struct {
 	UI cli.Ui
 }
 
 // Run runs the code of the comand.
-func (c *BufferCommand) Run(args []string) int {
-	var push bool
-	cmdFlags := flag.NewFlagSet("buffer", flag.ContinueOnError)
+func (c *BufferPushCommand) Run(args []string) int {
+	var apply bool
+	cmdFlags := flag.NewFlagSet("buffer push", flag.ContinueOnError)
 	cmdFlags.Usage = func() { c.UI.Output(c.Help()) }
-	cmdFlags.BoolVar(&push, "push", false, "")
+	cmdFlags.BoolVar(&apply, "apply", false, "")
 	if err := cmdFlags.Parse(args); err != nil {
 		return 1
 	}
@@ -54,8 +54,8 @@ func (c *BufferCommand) Run(args []string) int {
 		return 1
 	}
 
-	if !push {
-		c.UI.Output("Re-run the command with `-push` to actually push to Buffer.com\n")
+	if !apply {
+		c.UI.Output("Re-run the command with `-apply` to actually push to Buffer.com\n")
 	}
 
 	cli := buffer.NewClient(conf.Buffer.AccessToken)
@@ -64,7 +64,7 @@ func (c *BufferCommand) Run(args []string) int {
 			if link.Name != "" && link.URL != "" {
 				text := link.GetBufferText()
 
-				if push {
+				if apply {
 					updates, err := cli.Push(text, conf.Buffer.ProfileIDs)
 					if err != nil {
 						c.UI.Error(fmt.Sprintf("%s", err))
@@ -85,22 +85,22 @@ func (c *BufferCommand) Run(args []string) int {
 }
 
 // Help returns the description of the command.
-func (*BufferCommand) Help() string {
+func (*BufferPushCommand) Help() string {
 	helpText := `
-Usage: msw buffer [options] FILENAME
+Usage: msw buffer push [options] FILENAME
 
   This command pushes each entry of an issue to Buffer.com's queue. You need
   a configuration file with Buffer credentials ('~/.msw/msw.yml').
 
 Options:
 
-  -push				Push to Buffer.com's queue.
+  -apply				Push to Buffer.com's queue.
 
 `
 	return strings.TrimSpace(helpText)
 }
 
 // Synopsis returns the short description of the command.
-func (*BufferCommand) Synopsis() string {
+func (*BufferPushCommand) Synopsis() string {
 	return "push links to Buffer.com's queue"
 }

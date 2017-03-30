@@ -19,10 +19,13 @@ type Config struct {
 type BufferOptions struct {
 	AccessToken string
 	ProfileIDs  []string
+	BufferSize  int
 }
 
 var DefaultConfig = Config{
-	Buffer: BufferOptions{},
+	Buffer: BufferOptions{
+		BufferSize: 10,
+	},
 }
 
 var configDirName = "msw"
