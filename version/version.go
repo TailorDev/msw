@@ -6,10 +6,10 @@ import (
 )
 
 // Version is the version of the app
-const Version = "1.2.0"
+const Version = "1.2.1"
 
 // VersionPrerelease is the state of the app
-const VersionPrerelease = ""
+const VersionPrerelease = "dev"
 
 // FormattedVersion is used to format the full version of the app
 func FormattedVersion() string {
