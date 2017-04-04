@@ -150,5 +150,5 @@ categories:
       - name: ''
         url: ''
         abstract: ''
-        buffer: {{ $.BufferTemplate }}
+        buffer: '{{ $.BufferTemplate }}'
 {{ end }}`
