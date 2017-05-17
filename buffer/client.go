@@ -63,6 +63,7 @@ func (c *Client) Push(text string, profileIDs []string) (Updates, error) {
 		BufferCount      int
 		BufferPercentage int
 		Updates          Updates
+		Message          string
 	}
 
 	err = json.Unmarshal(res, &response)
@@ -71,7 +72,7 @@ func (c *Client) Push(text string, profileIDs []string) (Updates, error) {
 	}
 
 	if response.Success == false {
-		return u, errors.New("Unable to create a new update (Buffer is likely full)")
+		return u, errors.New(response.Message)
 	}
 
 	u = response.Updates

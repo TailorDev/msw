@@ -63,7 +63,7 @@ func (c *BufferPushCommand) Run(args []string) int {
 					updates, err := cli.Push(text, c.Conf.Buffer.ProfileIDs)
 					if err != nil {
 						c.UI.Error(fmt.Sprintf("%s", err))
-						return 1
+						continue
 					}
 
 					for _, u := range updates {
